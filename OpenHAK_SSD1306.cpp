@@ -14,6 +14,8 @@ products from Adafruit!
 Written by Limor Fried/Ladyada  for Adafruit Industries.
 BSD license, check license.txt for more information
 All text above, and the splash screen below must be included in any redistribution
+
+Modified by Joel Murphy/Biomurph for OpenHAK Fintess Tracker Summer, 2017
 *********************************************************************/
 
 #ifdef __AVR__
@@ -31,9 +33,9 @@ All text above, and the splash screen below must be included in any redistributi
 #include <stdlib.h>
 
 #include <Wire.h>
-#include <SPI.h>
+// #include <SPI.h>
 #include "Adafruit_GFX.h"
-#include "Adafruit_SSD1306.h"
+#include "OpenHAK_SSD1306.h"
 
 // the memory buffer for the LCD
 
@@ -111,7 +113,7 @@ static uint8_t buffer[SSD1306_LCDHEIGHT * SSD1306_LCDWIDTH / 8] = {
 #define ssd1306_swap(a, b) { int16_t t = a; a = b; b = t; }
 
 // the most basic function, set a single pixel
-void Adafruit_SSD1306::drawPixel(int16_t x, int16_t y, uint16_t color) {
+void OpenHAK_SSD1306::drawPixel(int16_t x, int16_t y, uint16_t color) {
   if ((x < 0) || (x >= width()) || (y < 0) || (y >= height()))
     return;
 
@@ -141,75 +143,75 @@ void Adafruit_SSD1306::drawPixel(int16_t x, int16_t y, uint16_t color) {
 
 }
 
-Adafruit_SSD1306::Adafruit_SSD1306(int8_t SID, int8_t SCLK, int8_t DC, int8_t RST, int8_t CS) : Adafruit_GFX(SSD1306_LCDWIDTH, SSD1306_LCDHEIGHT) {
-  cs = CS;
-  rst = RST;
-  dc = DC;
-  sclk = SCLK;
-  sid = SID;
-  hwSPI = false;
-}
+// OpenHAK_SSD1306::OpenHAK_SSD1306(int8_t SID, int8_t SCLK, int8_t DC, int8_t RST, int8_t CS) : Adafruit_GFX(SSD1306_LCDWIDTH, SSD1306_LCDHEIGHT) {
+//   cs = CS;
+//   rst = RST;
+//   dc = DC;
+//   sclk = SCLK;
+//   sid = SID;
+//   hwSPI = false;
+// }
 
 // constructor for hardware SPI - we indicate DataCommand, ChipSelect, Reset
-Adafruit_SSD1306::Adafruit_SSD1306(int8_t DC, int8_t RST, int8_t CS) : Adafruit_GFX(SSD1306_LCDWIDTH, SSD1306_LCDHEIGHT) {
-  dc = DC;
-  rst = RST;
-  cs = CS;
-  hwSPI = true;
-}
+// OpenHAK_SSD1306::OpenHAK_SSD1306(int8_t DC, int8_t RST, int8_t CS) : Adafruit_GFX(SSD1306_LCDWIDTH, SSD1306_LCDHEIGHT) {
+//   dc = DC;
+//   rst = RST;
+//   cs = CS;
+//   hwSPI = true;
+// }
 
 // initializer for I2C - we only indicate the reset pin!
-Adafruit_SSD1306::Adafruit_SSD1306(int8_t reset) :
+OpenHAK_SSD1306::OpenHAK_SSD1306(int8_t reset) :
 Adafruit_GFX(SSD1306_LCDWIDTH, SSD1306_LCDHEIGHT) {
   sclk = dc = cs = sid = -1;
   rst = reset;
 }
 
 
-void Adafruit_SSD1306::begin(uint8_t vccstate, uint8_t i2caddr, bool reset) {
+void OpenHAK_SSD1306::begin(uint8_t vccstate, uint8_t i2caddr, bool reset) {
   _vccstate = vccstate;
   _i2caddr = i2caddr;
 
   // set pin directions
-  if (sid != -1){
-    pinMode(dc, OUTPUT);
-    pinMode(cs, OUTPUT);
-#ifdef HAVE_PORTREG
-    csport      = portOutputRegister(digitalPinToPort(cs));
-    cspinmask   = digitalPinToBitMask(cs);
-    dcport      = portOutputRegister(digitalPinToPort(dc));
-    dcpinmask   = digitalPinToBitMask(dc);
-#endif
-    if (!hwSPI){
-      // set pins for software-SPI
-      pinMode(sid, OUTPUT);
-      pinMode(sclk, OUTPUT);
-#ifdef HAVE_PORTREG
-      clkport     = portOutputRegister(digitalPinToPort(sclk));
-      clkpinmask  = digitalPinToBitMask(sclk);
-      mosiport    = portOutputRegister(digitalPinToPort(sid));
-      mosipinmask = digitalPinToBitMask(sid);
-#endif
-      }
-    if (hwSPI){
-      SPI.begin();
-#ifdef SPI_HAS_TRANSACTION
-      SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
-#else
-      SPI.setClockDivider (4);
-#endif
-    }
-  }
-  else
-  {
+//   if (sid != -1){
+//     pinMode(dc, OUTPUT);
+//     pinMode(cs, OUTPUT);
+// #ifdef HAVE_PORTREG
+//     csport      = portOutputRegister(digitalPinToPort(cs));
+//     cspinmask   = digitalPinToBitMask(cs);
+//     dcport      = portOutputRegister(digitalPinToPort(dc));
+//     dcpinmask   = digitalPinToBitMask(dc);
+// #endif
+//     if (!hwSPI){
+//       // set pins for software-SPI
+//       pinMode(sid, OUTPUT);
+//       pinMode(sclk, OUTPUT);
+// #ifdef HAVE_PORTREG
+//       clkport     = portOutputRegister(digitalPinToPort(sclk));
+//       clkpinmask  = digitalPinToBitMask(sclk);
+//       mosiport    = portOutputRegister(digitalPinToPort(sid));
+//       mosipinmask = digitalPinToBitMask(sid);
+// #endif
+//       }
+//     if (hwSPI){
+//       SPI.begin();
+// #ifdef SPI_HAS_TRANSACTION
+//       SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
+// #else
+//       SPI.setClockDivider (4);
+// #endif
+//     }
+//   }
+//   else
+//   {
     // I2C Init
-    Wire.begin();
-#ifdef __SAM3X8E__
-    // Force 400 KHz I2C, rawr! (Uses pins 20, 21 for SDA, SCL)
-    TWI1->TWI_CWGR = 0;
-    TWI1->TWI_CWGR = ((VARIANT_MCK / (2 * 400000)) - 4) * 0x101;
-#endif
-  }
+    Wire2.beginOnPins(2,3); // SCL, SDA
+// #ifdef __SAM3X8E__
+//     // Force 400 KHz I2C, rawr! (Uses pins 20, 21 for SDA, SCL)
+//     TWI1->TWI_CWGR = 0;
+//     TWI1->TWI_CWGR = ((VARIANT_MCK / (2 * 400000)) - 4) * 0x101;
+// #endif
+//   }
   if ((reset) && (rst >= 0)) {
     // Setup reset pin direction (used by both SPI and I2C)
     pinMode(rst, OUTPUT);
@@ -288,7 +290,7 @@ void Adafruit_SSD1306::begin(uint8_t vccstate, uint8_t i2caddr, bool reset) {
 }
 
 
-void Adafruit_SSD1306::invertDisplay(uint8_t i) {
+void OpenHAK_SSD1306::invertDisplay(uint8_t i) {
   if (i) {
     ssd1306_command(SSD1306_INVERTDISPLAY);
   } else {
@@ -296,42 +298,42 @@ void Adafruit_SSD1306::invertDisplay(uint8_t i) {
   }
 }
 
-void Adafruit_SSD1306::ssd1306_command(uint8_t c) {
-  if (sid != -1)
-  {
-    // SPI
-#ifdef HAVE_PORTREG
-    *csport |= cspinmask;
-    *dcport &= ~dcpinmask;
-    *csport &= ~cspinmask;
-#else
-    digitalWrite(cs, HIGH);
-    digitalWrite(dc, LOW);
-    digitalWrite(cs, LOW);
-#endif
-    fastSPIwrite(c);
-#ifdef HAVE_PORTREG
-    *csport |= cspinmask;
-#else
-    digitalWrite(cs, HIGH);
-#endif
-  }
-  else
-  {
+void OpenHAK_SSD1306::ssd1306_command(uint8_t c) {
+//   if (sid != -1)
+//   {
+//     // SPI
+// #ifdef HAVE_PORTREG
+//     *csport |= cspinmask;
+//     *dcport &= ~dcpinmask;
+//     *csport &= ~cspinmask;
+// #else
+//     digitalWrite(cs, HIGH);
+//     digitalWrite(dc, LOW);
+//     digitalWrite(cs, LOW);
+// #endif
+//     fastSPIwrite(c);
+// #ifdef HAVE_PORTREG
+//     *csport |= cspinmask;
+// #else
+//     digitalWrite(cs, HIGH);
+// #endif
+//   }
+//   else
+//   {
     // I2C
     uint8_t control = 0x00;   // Co = 0, D/C = 0
-    Wire.beginTransmission(_i2caddr);
-    Wire.write(control);
-    Wire.write(c);
-    Wire.endTransmission();
-  }
+    Wire2.beginTransmission(_i2caddr);
+    Wire2.write(control);
+    Wire2.write(c);
+    Wire2.endTransmission();
+  // }
 }
 
 // startscrollright
 // Activate a right handed scroll for rows start through stop
 // Hint, the display is 16 rows tall. To scroll the whole display, run:
 // display.scrollright(0x00, 0x0F)
-void Adafruit_SSD1306::startscrollright(uint8_t start, uint8_t stop){
+void OpenHAK_SSD1306::startscrollright(uint8_t start, uint8_t stop){
   ssd1306_command(SSD1306_RIGHT_HORIZONTAL_SCROLL);
   ssd1306_command(0X00);
   ssd1306_command(start);
@@ -346,7 +348,7 @@ void Adafruit_SSD1306::startscrollright(uint8_t start, uint8_t stop){
 // Activate a right handed scroll for rows start through stop
 // Hint, the display is 16 rows tall. To scroll the whole display, run:
 // display.scrollright(0x00, 0x0F)
-void Adafruit_SSD1306::startscrollleft(uint8_t start, uint8_t stop){
+void OpenHAK_SSD1306::startscrollleft(uint8_t start, uint8_t stop){
   ssd1306_command(SSD1306_LEFT_HORIZONTAL_SCROLL);
   ssd1306_command(0X00);
   ssd1306_command(start);
@@ -361,7 +363,7 @@ void Adafruit_SSD1306::startscrollleft(uint8_t start, uint8_t stop){
 // Activate a diagonal scroll for rows start through stop
 // Hint, the display is 16 rows tall. To scroll the whole display, run:
 // display.scrollright(0x00, 0x0F)
-void Adafruit_SSD1306::startscrolldiagright(uint8_t start, uint8_t stop){
+void OpenHAK_SSD1306::startscrolldiagright(uint8_t start, uint8_t stop){
   ssd1306_command(SSD1306_SET_VERTICAL_SCROLL_AREA);
   ssd1306_command(0X00);
   ssd1306_command(SSD1306_LCDHEIGHT);
@@ -378,7 +380,7 @@ void Adafruit_SSD1306::startscrolldiagright(uint8_t start, uint8_t stop){
 // Activate a diagonal scroll for rows start through stop
 // Hint, the display is 16 rows tall. To scroll the whole display, run:
 // display.scrollright(0x00, 0x0F)
-void Adafruit_SSD1306::startscrolldiagleft(uint8_t start, uint8_t stop){
+void OpenHAK_SSD1306::startscrolldiagleft(uint8_t start, uint8_t stop){
   ssd1306_command(SSD1306_SET_VERTICAL_SCROLL_AREA);
   ssd1306_command(0X00);
   ssd1306_command(SSD1306_LCDHEIGHT);
@@ -391,14 +393,14 @@ void Adafruit_SSD1306::startscrolldiagleft(uint8_t start, uint8_t stop){
   ssd1306_command(SSD1306_ACTIVATE_SCROLL);
 }
 
-void Adafruit_SSD1306::stopscroll(void){
+void OpenHAK_SSD1306::stopscroll(void){
   ssd1306_command(SSD1306_DEACTIVATE_SCROLL);
 }
 
 // Dim the display
 // dim = true: display is dimmed
 // dim = false: display is normal
-void Adafruit_SSD1306::dim(boolean dim) {
+void OpenHAK_SSD1306::dim(boolean dim) {
   uint8_t contrast;
 
   if (dim) {
@@ -416,7 +418,7 @@ void Adafruit_SSD1306::dim(boolean dim) {
   ssd1306_command(contrast);
 }
 
-void Adafruit_SSD1306::display(void) {
+void OpenHAK_SSD1306::display(void) {
   ssd1306_command(SSD1306_COLUMNADDR);
   ssd1306_command(0);   // Column start address (0 = reset)
   ssd1306_command(SSD1306_LCDWIDTH-1); // Column end address (127 = reset)
@@ -433,30 +435,30 @@ void Adafruit_SSD1306::display(void) {
     ssd1306_command(1); // Page end address
   #endif
 
-  if (sid != -1)
-  {
-    // SPI
-#ifdef HAVE_PORTREG
-    *csport |= cspinmask;
-    *dcport |= dcpinmask;
-    *csport &= ~cspinmask;
-#else
-    digitalWrite(cs, HIGH);
-    digitalWrite(dc, HIGH);
-    digitalWrite(cs, LOW);
-#endif
-
-    for (uint16_t i=0; i<(SSD1306_LCDWIDTH*SSD1306_LCDHEIGHT/8); i++) {
-      fastSPIwrite(buffer[i]);
-    }
-#ifdef HAVE_PORTREG
-    *csport |= cspinmask;
-#else
-    digitalWrite(cs, HIGH);
-#endif
-  }
-  else
-  {
+//   if (sid != -1)
+//   {
+//     // SPI
+// #ifdef HAVE_PORTREG
+//     *csport |= cspinmask;
+//     *dcport |= dcpinmask;
+//     *csport &= ~cspinmask;
+// #else
+//     digitalWrite(cs, HIGH);
+//     digitalWrite(dc, HIGH);
+//     digitalWrite(cs, LOW);
+// #endif
+//
+//     for (uint16_t i=0; i<(SSD1306_LCDWIDTH*SSD1306_LCDHEIGHT/8); i++) {
+//       fastSPIwrite(buffer[i]);
+//     }
+// #ifdef HAVE_PORTREG
+//     *csport |= cspinmask;
+// #else
+//     digitalWrite(cs, HIGH);
+// #endif
+//   }
+//   else
+//   {
     // save I2C bitrate
 #ifdef TWBR
     uint8_t twbrbackup = TWBR;
@@ -469,49 +471,49 @@ void Adafruit_SSD1306::display(void) {
     // I2C
     for (uint16_t i=0; i<(SSD1306_LCDWIDTH*SSD1306_LCDHEIGHT/8); i++) {
       // send a bunch of data in one xmission
-      Wire.beginTransmission(_i2caddr);
+      Wire2.beginTransmission(_i2caddr);
       WIRE_WRITE(0x40);
       for (uint8_t x=0; x<16; x++) {
         WIRE_WRITE(buffer[i]);
         i++;
       }
       i--;
-      Wire.endTransmission();
+      Wire2.endTransmission();
     }
 #ifdef TWBR
     TWBR = twbrbackup;
 #endif
-  }
+  // }
 }
 
 // clear everything
-void Adafruit_SSD1306::clearDisplay(void) {
+void OpenHAK_SSD1306::clearDisplay(void) {
   memset(buffer, 0, (SSD1306_LCDWIDTH*SSD1306_LCDHEIGHT/8));
 }
 
 
-inline void Adafruit_SSD1306::fastSPIwrite(uint8_t d) {
+// inline void OpenHAK_SSD1306::fastSPIwrite(uint8_t d) {
+//
+//   if(hwSPI) {
+//     (void)SPI.transfer(d);
+//   } else {
+//     for(uint8_t bit = 0x80; bit; bit >>= 1) {
+// #ifdef HAVE_PORTREG
+//       *clkport &= ~clkpinmask;
+//       if(d & bit) *mosiport |=  mosipinmask;
+//       else        *mosiport &= ~mosipinmask;
+//       *clkport |=  clkpinmask;
+// #else
+//       digitalWrite(sclk, LOW);
+//       if(d & bit) digitalWrite(sid, HIGH);
+//       else        digitalWrite(sid, LOW);
+//       digitalWrite(sclk, HIGH);
+// #endif
+//     }
+//   }
+// }
 
-  if(hwSPI) {
-    (void)SPI.transfer(d);
-  } else {
-    for(uint8_t bit = 0x80; bit; bit >>= 1) {
-#ifdef HAVE_PORTREG
-      *clkport &= ~clkpinmask;
-      if(d & bit) *mosiport |=  mosipinmask;
-      else        *mosiport &= ~mosipinmask;
-      *clkport |=  clkpinmask;
-#else
-      digitalWrite(sclk, LOW);
-      if(d & bit) digitalWrite(sid, HIGH);
-      else        digitalWrite(sid, LOW);
-      digitalWrite(sclk, HIGH);
-#endif
-    }
-  }
-}
-
-void Adafruit_SSD1306::drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
+void OpenHAK_SSD1306::drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
   boolean bSwap = false;
   switch(rotation) {
     case 0:
@@ -545,7 +547,7 @@ void Adafruit_SSD1306::drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t c
   }
 }
 
-void Adafruit_SSD1306::drawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color) {
+void OpenHAK_SSD1306::drawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color) {
   // Do bounds/limit checks
   if(y < 0 || y >= HEIGHT) { return; }
 
@@ -580,7 +582,7 @@ void Adafruit_SSD1306::drawFastHLineInternal(int16_t x, int16_t y, int16_t w, ui
   }
 }
 
-void Adafruit_SSD1306::drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
+void OpenHAK_SSD1306::drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) {
   bool bSwap = false;
   switch(rotation) {
     case 0:
@@ -614,7 +616,7 @@ void Adafruit_SSD1306::drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t c
 }
 
 
-void Adafruit_SSD1306::drawFastVLineInternal(int16_t x, int16_t __y, int16_t __h, uint16_t color) {
+void OpenHAK_SSD1306::drawFastVLineInternal(int16_t x, int16_t __y, int16_t __h, uint16_t color) {
 
   // do nothing if we're off the left or right side of the screen
   if(x < 0 || x >= WIDTH) { return; }
