@@ -22,10 +22,10 @@ Modified by Joel Murphy/Biomurph for OpenHAK Fitness Tracker Summer, 2017
 
 #if ARDUINO >= 100
  #include "Arduino.h"
- #define WIRE_WRITE Wire.write
+ #define WIRE_WRITE Wire2.write
 #else
  #include "WProgram.h"
-  #define WIRE_WRITE Wire.send
+  #define WIRE_WRITE Wire2.send
 #endif
 
 #if defined(__SAM3X8E__)
@@ -72,8 +72,8 @@ Modified by Joel Murphy/Biomurph for OpenHAK Fitness Tracker Summer, 2017
     SSD1306_96_16
 
     -----------------------------------------------------------------------*/
-//   #define SSD1306_128_64
-   #define SSD1306_128_32
+  #define SSD1306_128_64
+  // #define SSD1306_128_32
 //   #define SSD1306_96_16
 /*=========================================================================*/
 

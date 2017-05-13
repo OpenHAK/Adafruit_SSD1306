@@ -460,10 +460,10 @@ void OpenHAK_SSD1306::display(void) {
 //   else
 //   {
     // save I2C bitrate
-#ifdef TWBR
-    uint8_t twbrbackup = TWBR;
-    TWBR = 12; // upgrade to 400KHz!
-#endif
+// #ifdef TWBR
+//     uint8_t twbrbackup = TWBR;
+//     TWBR = 12; // upgrade to 400KHz!
+// #endif
 
     //Serial.println(TWBR, DEC);
     //Serial.println(TWSR & 0x3, DEC);
@@ -480,9 +480,9 @@ void OpenHAK_SSD1306::display(void) {
       i--;
       Wire2.endTransmission();
     }
-#ifdef TWBR
-    TWBR = twbrbackup;
-#endif
+// #ifdef TWBR
+//     TWBR = twbrbackup;
+// #endif
   // }
 }
 
