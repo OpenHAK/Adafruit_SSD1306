@@ -15,10 +15,23 @@ Written by Limor Fried/Ladyada  for Adafruit Industries.
 BSD license, check license.txt for more information
 All text above, and the splash screen must be included in any redistribution
 
-Modified by Joel Murphy/Biomurph for OpenHAK Fitness Tracker Summer, 2017
+* Modified by Joel Murphy/Biomurph for OpenHAK Fitness Tracker Summer, 2017
+
 *********************************************************************/
 #ifndef _OpenHAK_SSD1306_H_
 #define _OpenHAK_SSD1306_H_
+
+/*=========================================================================
+    SELECT YOUR SSD1306 DISPLAY
+    -----------------------------------------------------------------------
+    Select the appropriate display below to create an appropriately
+    sized framebuffer, etc.
+    -----------------------------------------------------------------------*/
+  // #define SSD1306_128_64
+  #define SSD1306_128_32
+//   #define SSD1306_96_16
+/*=========================================================================*/
+
 
 #if ARDUINO >= 100
  #include "Arduino.h"
@@ -28,26 +41,9 @@ Modified by Joel Murphy/Biomurph for OpenHAK Fitness Tracker Summer, 2017
   #define WIRE_WRITE Wire2.send
 #endif
 
-#if defined(__SAM3X8E__)
- typedef volatile RwReg PortReg;
- typedef uint32_t PortMask;
- #define HAVE_PORTREG
-#elif defined(ARDUINO_ARCH_SAMD)
-// not supported
-#elif defined(ESP8266) || defined(ESP32) || defined(ARDUINO_STM32_FEATHER) || defined(__arc__)
   typedef volatile uint32_t PortReg;
   typedef uint32_t PortMask;
-#elif defined(__AVR__)
-  typedef volatile uint8_t PortReg;
-  typedef uint8_t PortMask;
-  #define HAVE_PORTREG
-#else
-  // chances are its 32 bit so assume that
-  typedef volatile uint32_t PortReg;
-  typedef uint32_t PortMask;
-#endif
 
-// #include <SPI.h>
 #include <Adafruit_GFX.h>
 
 #define BLACK 0
@@ -57,25 +53,6 @@ Modified by Joel Murphy/Biomurph for OpenHAK Fitness Tracker Summer, 2017
 #define SSD1306_I2C_ADDRESS   0x3C  // 011110+SA0+RW - 0x3C or 0x3D
 // Address for 128x32 is 0x3C
 // Address for 128x64 is 0x3D (default) or 0x3C (if SA0 is grounded)
-
-/*=========================================================================
-    SSD1306 Displays
-    -----------------------------------------------------------------------
-    The driver is used in multiple displays (128x64, 128x32, etc.).
-    Select the appropriate display below to create an appropriately
-    sized framebuffer, etc.
-
-    SSD1306_128_64  128x64 pixel display
-
-    SSD1306_128_32  128x32 pixel display
-
-    SSD1306_96_16
-
-    -----------------------------------------------------------------------*/
-  #define SSD1306_128_64
-  // #define SSD1306_128_32
-//   #define SSD1306_96_16
-/*=========================================================================*/
 
 #if defined SSD1306_128_64 && defined SSD1306_128_32
   #error "Only one SSD1306 display can be specified at once in SSD1306.h"
@@ -149,8 +126,7 @@ Modified by Joel Murphy/Biomurph for OpenHAK Fitness Tracker Summer, 2017
 
 class OpenHAK_SSD1306 : public Adafruit_GFX {
  public:
-  // OpenHAK_SSD1306(int8_t SID, int8_t SCLK, int8_t DC, int8_t RST, int8_t CS);
-  // OpenHAK_SSD1306(int8_t DC, int8_t RST, int8_t CS);
+
   OpenHAK_SSD1306(int8_t RST = -1);
 
   void begin(uint8_t switchvcc = SSD1306_SWITCHCAPVCC, uint8_t i2caddr = SSD1306_I2C_ADDRESS, bool reset=true);
@@ -176,13 +152,6 @@ class OpenHAK_SSD1306 : public Adafruit_GFX {
 
  private:
   int8_t _i2caddr, _vccstate, sid, sclk, dc, rst, cs;
-  // void fastSPIwrite(uint8_t c);
-
-  boolean hwSPI;
-// #ifdef HAVE_PORTREG
-//   PortReg *mosiport, *clkport, *csport, *dcport;
-//   PortMask mosipinmask, clkpinmask, cspinmask, dcpinmask;
-// #endif
 
   inline void drawFastVLineInternal(int16_t x, int16_t y, int16_t h, uint16_t color) __attribute__((always_inline));
   inline void drawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color) __attribute__((always_inline));

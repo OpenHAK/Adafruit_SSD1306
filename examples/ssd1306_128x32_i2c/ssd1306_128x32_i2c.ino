@@ -15,8 +15,9 @@ Written by Limor Fried/Ladyada  for Adafruit Industries.
 BSD license, check license.txt for more information
 All text above, and the splash screen must be included in any redistribution
 
-Modified by Joel Murphy/Biomurph for OpenHAK Fitness Tracker Summer, 2017
-*********************************************************************/
+* Modified by Joel Murphy/Biomurph for OpenHAK Fitness Tracker Summer, 2017
+
+********************************************************************/
 
 
 #include <Wire.h>
